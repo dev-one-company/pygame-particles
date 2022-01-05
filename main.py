@@ -8,7 +8,7 @@ pygame.init()
 
 SIZE = WIDTH, HEIGHT = 500, 500
 S = 10
-BORDER_WIDTH, CUBE_WIDTH = 1, S
+BORDER_WIDTH, CUBE_SIZE = 1, S
 x, y, g = 0, 0, 0.1
 
 screen = pygame.display.set_mode(SIZE)
@@ -44,7 +44,8 @@ def y_bottom_is_valid(_y: int):
 def create_new_cube(_x: int, _y: int):
     for _ in range(5):
         _g = (-random() if randint(0, 1) else random()) / 4
-        list_of_cubes.append([_x, _y, COLORS[randint(0, len(COLORS) - 1)], _g, str(uuid.uuid4())])
+        _g2 = (-random() if randint(0, 1) else random()) / 3
+        list_of_cubes.append([_x, _y, COLORS[randint(0, len(COLORS) - 1)], _g, _g2, str(uuid.uuid4())])
 
 
 while 1:
@@ -64,6 +65,8 @@ while 1:
             elif event.key == pygame.K_UP:
                 if y_top_is_valid(y):
                     y -= S
+            elif event.key == pygame.K_d:
+                list_of_cubes = []
             elif event.key == 32:
                 create_new_cube(x-S, y-S)
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -72,20 +75,18 @@ while 1:
             y = pos[1] - (pos[1] % S)
 
     for cube_config in list_of_cubes:
-        cube = pygame.Surface((CUBE_WIDTH, CUBE_WIDTH))
+        cube = pygame.Surface((CUBE_SIZE, CUBE_SIZE))
         cube.fill(cube_config[2])
-        cube_config[1] = cube_config[1] + g
+        cube_config[1] = cube_config[1] + cube_config[4]
         cube_config[0] = cube_config[0] + cube_config[3]
         screen.blit(cube, (cube_config[0], cube_config[1]))
 
-        if cube_config[0] <= 0:
+        if cube_config[0] <= 0 or cube_config[0] + CUBE_SIZE >= WIDTH:
             cube_config[3] = -cube_config[3]
             cube_config[0] = cube_config[0] + cube_config[3]
-        if cube_config[0] >= WIDTH:
-            cube_config[3] = -cube_config[3]
-            cube_config[0] = cube_config[0] + cube_config[3]
-        if cube_config[1] > HEIGHT:
-            list_of_cubes.remove(cube_config)
+        if cube_config[1] + CUBE_SIZE >= HEIGHT or cube_config[1] <= 0:
+            cube_config[4] = -cube_config[4]
+            cube_config[1] = cube_config[1] + cube_config[4]
 
     for i in range(HEIGHT // S):
         line_horizontal = pygame.Surface((WIDTH, BORDER_WIDTH))
