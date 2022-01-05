@@ -13,10 +13,13 @@ x, y, g = 0, 0, 0.1
 
 screen = pygame.display.set_mode(SIZE)
 
+YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
-GREEN_5 = (0, 255, 0, 0.5)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
+LIGHT_BLUE = (57, 122, 227)
+PURPLE = (228, 45, 235)
+COLORS = [GREEN, RED, YELLOW, LIGHT_BLUE, PURPLE]
 
 
 list_of_cubes = []
@@ -38,9 +41,10 @@ def y_bottom_is_valid(_y: int):
     return True if _y + 10 < WIDTH else False
 
 
-def create_new_cube(_x: int, _y: int, color: tuple[int, int, int] = (10, 10, 10)):
-    _g = (-random() if randint(0, 1) else random()) / 4
-    list_of_cubes.append([_x, _y, color, _g, str(uuid.uuid4())])
+def create_new_cube(_x: int, _y: int):
+    for _ in range(5):
+        _g = (-random() if randint(0, 1) else random()) / 4
+        list_of_cubes.append([_x, _y, COLORS[randint(0, len(COLORS) - 1)], _g, str(uuid.uuid4())])
 
 
 while 1:
@@ -61,7 +65,7 @@ while 1:
                 if y_top_is_valid(y):
                     y -= S
             elif event.key == 32:
-                create_new_cube(x-S, y-S, RED)
+                create_new_cube(x-S, y-S)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             x = pos[0] - (pos[0] % S)
