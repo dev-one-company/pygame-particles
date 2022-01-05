@@ -6,8 +6,13 @@ import sys
 
 pygame.init()
 
-SIZE = WIDTH, HEIGHT = 500, 500
+w_info = pygame.display.Info()
+
+W = w_info.current_w - 100
+H = w_info.current_h - 100
+
 S = 10
+SIZE = WIDTH, HEIGHT = W - (W % S), H - (H % S)
 BORDER_WIDTH, CUBE_SIZE = 1, S
 x, y, g = (WIDTH / 2) - ((WIDTH / 2) % S) - S, (HEIGHT / 2) - ((HEIGHT / 2) % S) - S, 0.1
 print(x, y)
@@ -44,9 +49,9 @@ def y_bottom_is_valid(_y: int):
 
 
 def create_new_cube(_x: int, _y: int):
-    for _ in range(5):
-        _g = (-random() if randint(0, 1) else random()) / 4
-        _g2 = (-random() if randint(0, 1) else random()) / 3
+    for _ in range(10):
+        _g = (-random() if randint(0, 1) else random())
+        _g2 = (-random() if randint(0, 1) else random()) / 1.5
         list_of_cubes.append([_x, _y, COLORS[randint(0, len(COLORS) - 1)], _g, _g2, str(uuid.uuid4())])
 
 
