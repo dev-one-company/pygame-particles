@@ -9,20 +9,22 @@ pygame.init()
 SIZE = WIDTH, HEIGHT = 500, 500
 S = 10
 BORDER_WIDTH, CUBE_SIZE = 1, S
-x, y, g = 0, 0, 0.1
+x, y, g = (WIDTH / 2) - ((WIDTH / 2) % S) - S, (HEIGHT / 2) - ((HEIGHT / 2) % S) - S, 0.1
+print(x, y)
 
 screen = pygame.display.set_mode(SIZE)
 
-YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
-LIGHT_BLUE = (57, 122, 227)
-PURPLE = (228, 45, 235)
-COLORS = [GREEN, RED, YELLOW, LIGHT_BLUE, PURPLE]
-
+GRAY = (65, 66, 77)
+LIGHT_GRAY = (124, 126, 148)
+DARK_BLUE = (33, 37, 87)
+COLORS = [GRAY, LIGHT_GRAY, DARK_BLUE]
 
 list_of_cubes = []
+
+font = pygame.font.SysFont(pygame.font.get_fonts()[0], 16)
 
 
 def x_left_is_valid(_x: int):
@@ -74,6 +76,7 @@ while 1:
             x = pos[0] - (pos[0] % S)
             y = pos[1] - (pos[1] % S)
 
+    # draw cubes
     for cube_config in list_of_cubes:
         cube = pygame.Surface((CUBE_SIZE, CUBE_SIZE))
         cube.fill(cube_config[2])
@@ -88,32 +91,40 @@ while 1:
             cube_config[4] = -cube_config[4]
             cube_config[1] = cube_config[1] + cube_config[4]
 
+    # draw horizontal line
     for i in range(HEIGHT // S):
         line_horizontal = pygame.Surface((WIDTH, BORDER_WIDTH))
         if y + S == int(S * i):
-            line_horizontal.fill(GREEN)
+            line_horizontal.fill(GRAY)
             screen.blit(line_horizontal, (0, int(S * i)))
         elif y == int(S * i):
-            line_horizontal.fill(GREEN)
+            line_horizontal.fill(GRAY)
             screen.blit(line_horizontal, (0, int(S * i)))
 
+    # draw vertical line
     for i in range(WIDTH // S):
         line_vertical = pygame.Surface((BORDER_WIDTH, HEIGHT))
         if x + S == int(S * i):
-            line_vertical.fill(GREEN)
+            line_vertical.fill(GRAY)
             screen.blit(line_vertical, (int(S * i), 0))
         elif x == int(S * i):
-            line_vertical.fill(GREEN)
+            line_vertical.fill(GRAY)
             screen.blit(line_vertical, (int(S * i), 0))
 
+    # draw circle
     CIRCLE_RAY = S * 5
     CIRCLE_X = x + (S / 2)
     CIRCLE_Y = y + (S / 2)
-    circle = pygame.draw.circle(screen, GREEN, (CIRCLE_X, CIRCLE_Y), CIRCLE_RAY, BORDER_WIDTH)
+    circle = pygame.draw.circle(screen, GRAY, (CIRCLE_X, CIRCLE_Y), CIRCLE_RAY, BORDER_WIDTH)
 
+    # draw rect between lines
     rect = pygame.Surface((S, S))
-    rect.fill(GREEN)
+    rect.fill(GRAY)
     screen.blit(rect, (x, y))
-    pygame.display.update()
 
+    # draw text
+    text = font.render("  " + str(len(list_of_cubes)) + "  ", True, BLACK, LIGHT_GRAY)
+    screen.blit(text, (0, 0))
+
+    pygame.display.update()
     screen.fill((0, 0, 0))
